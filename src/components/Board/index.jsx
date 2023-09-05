@@ -45,24 +45,41 @@ export default function Board() {
         </DndContext>
     );
 
+    function removeFromArray(idCard) {
+        let newSlots = slot.map((item) => (
+            item.idCard === idCard ?
+                {
+                    idSlot: item.idSlot,
+                    idCard: null
+                } :
+                item
+        ));
+
+        return newSlots;
+    }
+
     function handleDragEnd(event) {
-        console.log(event);
+        // console.log(event);
         const { over, active } = event;
 
-        console.log(`Carta ${active.id} na Posicao ${over.id}`)
+        if (over) {
+            console.log(`Carta ${active.id} na Posicao ${over.id}`)
 
-        slot[over.id].idCard = active.id;
-
-        setSlot(slot);
-
-        // parent[over.id] = active.id;
-
-        // // console.log(parent);
-
-        // setParent(parent);
-
-        // If the item is dropped over a container, set it as the parent
-        // otherwise reset the parent to `null`
-        // setParent(over ? over.id : null);
+            let newSlots = removeFromArray(active.id);
+    
+            newSlots = newSlots.map((item, j) => {
+                return j === over.id ? 
+                    {
+                        idSlot: item.idSlot,
+                        idCard: active.id
+                    } : 
+                    item
+            })
+            // console.log(newSlots);
+            setSlot(newSlots);
+        }
+        else {
+            setSlot(removeFromArray(active.id))
+        }
     }
 }
