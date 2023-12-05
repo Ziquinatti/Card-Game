@@ -1,0 +1,24 @@
+@use '../../variables' as v;
+
+%card {
+    width: 200px;
+    height: 300px;
+
+    background-color: lightblue;
+}
+
+.in-hand {
+    @extend %card;
+    box-shadow: -5px 0px 4px 0px v.$cardShadowColor;
+    // rotate: 30deg;
+
+    &:hover {
+        box-shadow: 0px 2px 4px 5px v.$cardShadowColor;
+        transform: translate(0%, -40%) scale(1.2);
+    }
+}
+
+.in-slot {
+    @extend %card;
+    background-color: rgb(0, 128, 107);
+}

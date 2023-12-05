@@ -1,0 +1,25 @@
+@use '../../variables' as v;
+@use 'sass:math';
+
+
+%slots {
+    padding: 15px;
+
+    display: flex;
+    justify-content: space-evenly;
+
+    background-color: v.$baseSlots-color;
+}
+
+.my {
+    @extend %slots;
+    transform-style: preserve-3d;
+    transform: rotateX(50deg) translateZ(200px);
+}
+
+.enemy {
+    @extend %slots;
+    rotate: 180deg;
+    transform-style: preserve-3d;
+    transform: rotateX(-50deg) translateY(120px) translateZ(-68px);
+}

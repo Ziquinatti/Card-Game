@@ -1,0 +1,87 @@
+@use '../../variables' as v;
+
+.card_anim {
+    visibility: hidden;
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+
+    width: 200px;
+    height: 300px;
+
+    background-color: lightseagreen;
+
+    transform: rotateY(180deg);
+}
+
+.card_anim[draw='1'] {
+    visibility: visible;
+    animation-name: flip-scale-up-ver;
+    animation-duration: 0.75s;
+    animation-fill-mode: forwards;
+}
+
+.card_anim[draw='2'] {
+    visibility: visible;
+    animation-name: put-card-in-hand;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes flip-scale-up-ver {
+    0% {
+        transform: scale(1) rotateY(180deg);
+    }
+
+    50% {
+        transform: translate(calc(-50vw + 25%), calc(-50vh + 25%)) scale(2.5) rotateY(90deg);
+    }
+
+    100% {
+        transform: translate(calc(-50vw + 50%), calc(-50vh + 50%)) scale(2) rotateY(0);
+    }
+}
+
+@keyframes put-card-in-hand {
+    0% {
+        transform: translate(calc(-50vw + 50%), calc(-50vh + 50%)) scale(2);
+    }
+
+    50% {
+        transform: translate(calc(-50vw + 50%), calc(-25vh + 25%));
+        z-index: -1;
+    }
+
+    100% {
+        transform: translate(calc(-50vw + 50%), calc(0vh)) scale(0.5);
+        z-index: -1;
+    }
+}
+
+.deck {
+    position: absolute;
+    bottom: 32px;
+    right: 42px;
+
+    width: 200px;
+    height: 300px;
+
+    background-color: lightseagreen;
+
+    &:hover {
+        transform: translate(-5%, -2%);
+    }
+}
+
+.deck_base {
+    position: absolute;
+    bottom: 24px;
+    right: 32px;
+
+    width: 200px;
+    height: 300px;
+
+    background-color: #757575;
+    box-shadow: 10px 5px 0 #444444;
+
+}

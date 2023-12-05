@@ -1,0 +1,13 @@
+@use '../../variables' as v;
+
+.hand {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    
+    display: flex;
+    justify-items: center;
+
+    // background-color: lightgreen;
+}
