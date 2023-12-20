@@ -5,13 +5,13 @@ export const handSlice = createSlice({
     initialState: {
         cards: [
             {
-                id: 0,
+                uuid: '0',
                 name: 'Guerreiro',
                 life: 50,
                 damage: 15
             },
             {
-                id: 2,
+                uuid: '2',
                 name: 'Leão',
                 life: 20,
                 damage: 32
@@ -29,10 +29,10 @@ export const handSlice = createSlice({
         },
         removeCard: {
             reducer: (state, action) => {
-                state.cards.splice(action.payload, 1)
+                state.cards.splice(action.payload.index, 1)
             },
             prepare: (index) => {
-                return { payload: {...index} }
+                return { payload: { index: index } }
             },
         },
     },

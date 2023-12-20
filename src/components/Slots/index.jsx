@@ -6,7 +6,15 @@ import { useSelector } from 'react-redux';
 
 export default function Slots({ classStyle }){
     const slotsLen = useSelector((state) => state.slots.slotsLength)
-    const slotsCard = useSelector((state) => state.slots.allSlots)
+
+    const playerSlotsCards = useSelector((state) => state.slots.allPlayerSlots)
+    const opponentSlotsCards = useSelector((state) => state.slots.allOpponentSlots)
+
+    let slotsCard
+    if(classStyle === 'enemy')
+        slotsCard = opponentSlotsCards
+    else
+        slotsCard = playerSlotsCards
 
     return (
         <div className={styles[classStyle]}>
@@ -16,30 +24,24 @@ export default function Slots({ classStyle }){
 
                 if (slotsCard[index] !== undefined) {
                     card = <Card 
-                                key={slotsCard[index].id}
+                                dragIndex={index}
+                                isNotDraggable={true}
                                 classStyle="in-slot"
                                 {...slotsCard[index]}
+                                onClick={() => console.log(slotsCard[index].uuid)}
                             />
                 }
                 
                 return (
-                    <Slot key={index}>
+                    <Slot 
+                        key={index}
+                        dropId={'slt-' + index}
+                        isDroppable={card ? true : false}
+                    >
                         {card}
                     </Slot>
                 )
             })}
-            {/* <Slot>
-                <Card classStyle="in-slot" cardId={2}/>
-            </Slot>
-            <Slot>
-
-            </Slot>
-            <Slot>
-                <Card classStyle="in-slot" cardId={3}/>
-            </Slot>
-            <Slot>
-                
-            </Slot> */}
         </div>
     );
 }

@@ -10,8 +10,8 @@ export default function Deck() {
     const drawAction = () => {
         if (draw === 2) {
             setDraw(0)
-            console.log(drawCard({ id: 5, name: 'Teste', life: 10, damage: 5 }))
-            dispatch(drawCard({ id: 5, name: 'Teste', life: 10, damage: 5 }))
+            console.log(drawCard({ uuid: '5', name: 'Teste', life: 10, damage: 5 }))
+            dispatch(drawCard({ uuid: '5', name: 'Teste', life: 10, damage: 5 }))
         }
     }
 
