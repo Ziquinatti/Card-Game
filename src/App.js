@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <div className="app-board">
-        <Slots classStyle="enemy"/>
+        {/* <Slots classStyle="enemy"/> */}
         <Slots classStyle="my"/>
       </div>
       <Hand />
