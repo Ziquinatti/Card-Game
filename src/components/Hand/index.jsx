@@ -10,9 +10,9 @@ export default function Hand() {
     return (
         <div className={styles.hand}>
             {hand.map((card, index) => {
-                // console.log(card)
+                // console.log(card.id.toString() + index.toString())
                 return <Card 
-                    key={card.id}
+                    key={card.id.toString() + index.toString()}
                     classStyle="in-hand"
                     {...card}
                     onClick={() => console.log(removeCard({ index: index }))}
