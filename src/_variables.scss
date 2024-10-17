@@ -1,5 +1,29 @@
-$baseSlots-color: #7e0000;
-$slot-color: #520101;
-$slotBorder-color: #b4b400ad;
+$fadeColor: rgba(0, 0, 0, 0.5);
+$invisibleColor: rgba(255, 255, 255, 0);
+$goldColor: rgba(255,215,0,1);
+$oldGoldColor: rgba(218,165,32,1);
 
-$cardShadowColor: #919191a6;
+$tableTextColor: rgba(255, 255, 255, 0.849);
+
+$boardMiddle: rgba(0, 0, 0, 0.1);
+
+$buttonColor: rgba(0, 0, 0, 0.3);
+$buttonColorHover: rgba(122, 122, 122, 0.3);
+
+$cardBaseColor: rgb(248, 248, 248);
+$cardDarkColor: rgb(7, 7, 7);
+$cardShadowColor: rgb(80, 80, 80);
+
+$cardIconFire: rgb(197, 0, 0);
+$cardIconWater: rgb(0, 149, 218);
+$cardIconAir: rgb(179, 204, 204);
+$cardIconEarth: rgb(180, 138, 0);
+
+$cardIconIce: rgb(123, 183, 211);
+$cardIconObsidian: rgb(61, 0, 70);
+$cardIconTornado: rgb(139, 139, 139);
+$cardIconTree: rgb(87, 180, 0);
+
+body {
+    font-family: "JetBrains Mono", monospace;
+}

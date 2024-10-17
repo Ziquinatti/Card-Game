@@ -1,37 +1,31 @@
-import styles from "./Deck.module.scss"
-import { useState } from "react";
-import { useDispatch, useSelector } from 'react-redux';
-import { drawCard } from "../../features/hand/handSlice";
+import styles from "./Deck.module.scss";
 
-export default function Deck() {
+import { useState, useEffect } from "react";
+
+export default function Deck({ newRound, refillHand }) {
     const [draw, setDraw] = useState(0);
-    const dispatch = useDispatch()
 
-    const drawAction = () => {
-        if (draw === 2) {
-            setDraw(0)
-            console.log(drawCard({ id: 5, name: 'Teste', life: 10, damage: 5 }))
-            dispatch(drawCard({ id: 5, name: 'Teste', life: 10, damage: 5 }))
-        }
+    const resetAnim = () => {
+        setDraw(0);
+        refillHand();
     }
 
+    useEffect(() => {
+        setDraw(1);
+    }, [newRound]);
+
     return (
-        <div>
-            <div className={styles.deck_base}></div>
-            <div 
-                className={styles.deck}
-                onClick={() => setDraw(1)}
-            >
-                <img src="/assets/back_card_v2.png" alt="deck" style={{width: "100%", height: "100%"}}/>
+        <>
+            <div className={styles.deck}>
+                <span className={styles.effect}></span>
+                <div className={styles.card_anim} draw={draw} onAnimationEnd={() => resetAnim()}>
+                    <img className={styles.image} src={`${process.env.PUBLIC_URL}/assets/BackCard.png`} alt="deck_anim" />
+                </div>
+                <div className={styles.topCard}>
+                    <img className={styles.image} src={`${process.env.PUBLIC_URL}/assets/BackCard.png`} alt="deck" />
+                </div>
             </div>
-            <div 
-                className={styles.card_anim}
-                onClick={() => setDraw(2)}
-                onAnimationEnd={() => drawAction()}
-                draw={draw}
-            >
-                <img src="/assets/placeholder2.png" alt="deck" style={{width: "100%", height: "100%"}}/>
-            </div>
-        </div>
+            <button onClick={() => setDraw(1)} style={{ position: 'absolute', top: '20%', right: '10%'}}>Play Animation</button>
+        </>
     );
 }
