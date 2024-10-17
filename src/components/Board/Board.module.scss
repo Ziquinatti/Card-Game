@@ -1,0 +1,11 @@
+@import "../../variables";
+
+.board {
+    width: 45rem;
+    height: 45rem;
+
+    border-radius: 50%;
+    
+    background: $boardMiddle;
+    background: radial-gradient(circle, $boardMiddle 0%, $boardMiddle 65%, $invisibleColor 70%, $invisibleColor 100%)
+}

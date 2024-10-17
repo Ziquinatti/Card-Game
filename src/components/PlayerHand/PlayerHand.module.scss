@@ -1,0 +1,17 @@
+.playerHand {
+    position: absolute;
+    z-index: 5;
+    bottom: -10rem;
+
+    left: 0;
+    right: 0;
+
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 5px;
+
+    &:hover {
+        bottom: 1rem;
+    }
+}
