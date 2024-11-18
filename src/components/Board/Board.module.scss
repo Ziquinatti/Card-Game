@@ -1,11 +1,121 @@
 @import "../../variables";
 
 .board {
-    width: 45rem;
-    height: 45rem;
+    width: 35rem;
+    height: 35rem;
 
     border-radius: 50%;
-    
+
     background: $boardMiddle;
-    background: radial-gradient(circle, $boardMiddle 0%, $boardMiddle 65%, $invisibleColor 70%, $invisibleColor 100%)
+    background: radial-gradient(circle, $boardMiddle 0%, $boardMiddle 65%, $invisibleColor 70%, $invisibleColor 100%);
+
+    display: grid;
+    place-items: center;
+}
+
+.spiral {
+    visibility: hidden;
+
+    width: 40rem;
+    height: 40rem;
+
+    position: absolute;
+    z-index: 10;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    // border-width: 5px;
+    // border-style: dashed;
+    // border-color: blue;
+    // border-radius: 50%;
+}
+
+.spiral[combine='1'] {
+    visibility: visible;
+
+    animation-name: spin;
+    animation-duration: 2s;
+    animation-timing-function: cubic-bezier(0.4, 0, 1, 1);
+    // animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    animation-delay: 0ms;
+
+}
+
+@keyframes spin {
+    from {
+        width: 40rem;
+        height: 40rem;
+        transform: rotate(0deg);
+    }
+
+    to {
+        width: 20rem;
+        height: 20rem;
+        transform: rotate(1020deg);
+    }
+}
+
+.burn {
+    visibility: hidden;
+    height: 0px;
+    width: 0px;
+
+    position: absolute;
+    z-index: 10;
+
+    border-radius: 50%;
+    border: 3px solid rgb(49, 22, 1);
+    -webkit-box-shadow: inset 0px 0px 6px 2px #fffb5c00, inset 0px 0px 8px 3px rgb(52, 21, 0), 0px 0px 6px 2px #3f1c0100, 0px 0px 15px 10px rgba(105, 46, 0, 0), 0px 0px 17px 18px #401d02eb, inset 0px 0px 29px 22px #c4720f00;
+    -moz-box-shadow: inset 0px 0px 6px 2px #fffb5c00, inset 0px 0px 8px 3px rgb(52, 21, 0), 0px 0px 6px 2px #3f1c0100, 0px 0px 15px 10px rgba(105, 46, 0, 0), 0px 0px 17px 18px #401d02eb, inset 0px 0px 29px 22px #c4720f00;
+    box-shadow: inset 0px 0px 6px 2px #fffb5c00, inset 0px 0px 8px 3px rgb(52, 21, 0), 0px 0px 6px 2px #3f1c0100, 0px 0px 15px 10px rgba(105, 46, 0, 0), 0px 0px 17px 18px #401d02eb, inset 0px 0px 29px 22px #c4720f00;
+}
+
+.burn[effect='1'] {
+    visibility: visible;
+    animation: 1s burn-grow linear;
+}
+
+@keyframes burn-grow {
+    0% {
+        opacity: 1;
+        height: 0px;
+        width: 0px;
+        border: 3px solid #FFFB5C;
+        -webkit-box-shadow: inset 0px 0px 6px 2px #FFFB5C, inset 0px 0px 5px 6px rgba(243, 108, 0, 0.5), 0px 0px 6px 2px #FFFB5C, 0px 0px 15px 10px rgba(241, 124, 4, 0.6), 0px 0px 8px 11px #1c0901eb, inset 0px 0px 29px 22px #c4720f42;
+        -moz-box-shadow: inset 0px 0px 6px 2px #FFFB5C, inset 0px 0px 5px 6px rgba(243, 108, 0, 0.5), 0px 0px 6px 2px #FFFB5C, 0px 0px 15px 10px rgba(241, 124, 4, 0.6), 0px 0px 8px 11px #1c0901eb, inset 0px 0px 29px 22px #c4720f42;
+        box-shadow: inset 0px 0px 6px 2px #FFFB5C, inset 0px 0px 5px 6px rgba(243, 108, 0, 0.5), 0px 0px 6px 2px #FFFB5C, 0px 0px 15px 10px rgba(241, 124, 4, 0.6), 0px 0px 8px 11px #1c0901eb, inset 0px 0px 29px 22px #c4720f42;
+
+    }
+
+    65% {
+        height: 450px;
+        width: 450px;
+        border: 3px solid #FFFB5C;
+        -webkit-box-shadow: inset 0px 0px 6px 2px #FFFB5C, inset 0px 0px 5px 6px rgba(243, 108, 0, 0.5), 0px 0px 6px 2px #FFFB5C, 0px 0px 15px 10px rgba(241, 124, 4, 0.6), 0px 0px 8px 11px #1c0901eb, inset 0px 0px 29px 22px #c4720f42;
+        -moz-box-shadow: inset 0px 0px 6px 2px #FFFB5C, inset 0px 0px 5px 6px rgba(243, 108, 0, 0.5), 0px 0px 6px 2px #FFFB5C, 0px 0px 15px 10px rgba(241, 124, 4, 0.6), 0px 0px 8px 11px #1c0901eb, inset 0px 0px 29px 22px #c4720f42;
+        box-shadow: inset 0px 0px 6px 2px #FFFB5C, inset 0px 0px 5px 6px rgba(243, 108, 0, 0.5), 0px 0px 6px 2px #FFFB5C, 0px 0px 15px 10px rgba(241, 124, 4, 0.6), 0px 0px 8px 11px #1c0901eb, inset 0px 0px 29px 22px #c4720f42;
+
+    }
+
+    70% {
+        opacity: 1;
+        height: 500px;
+        width: 500px;
+    }
+
+    75% {
+        opacity: 0.5;
+        height: 550px;
+        width: 550px;
+    }
+
+    100% {
+        opacity: 0;
+        height: 600px;
+        width: 600px;
+    }
 }

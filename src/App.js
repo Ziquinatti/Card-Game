@@ -1,7 +1,3 @@
-import { DragDropContext } from "react-beautiful-dnd";
-import { useState, useEffect } from "react";
-import { v4 as uuid } from "uuid";
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
@@ -12,55 +8,33 @@ import Board from "./components/Board";
 import Menu from "./components/Menu";
 import Status from "./components/Status";
 
+import { addCard, clear } from './data/board/boardSlice';
 
-// const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+import combinationsData from "./data/combinations.json";
+
+import { DragDropContext } from "react-beautiful-dnd";
+import { useState, useEffect } from "react";
+import { v4 as uuid } from "uuid";
+import { useSelector, useDispatch } from "react-redux";
+
+// Naipes e Valores iniciais
 const suits = ['fire', 'water', 'air', 'earth'];
 const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
-const combinations = {
-    "water-water": (A, B) => A * B,
-    "water-fire": (A, B) => A - B,
-    "water-air": (A, B) => (A + B) * 2, // ICE
-    "water-earth": (A, B) => A + B,
-
-    "fire-water": (A, B) => (A + B) * 3, // OBSIDIAN
-    "fire-fire": (A, B) => 0,
-    "fire-air": (A, B) => A * B,
-    "fire-earth": (A, B) => A - B,
-
-    "air-water": (A, B) => (A + B) / 2,
-    "air-fire": (A, B) => (A + B) / 2,
-    "air-air": (A, B) => (A + B) * 2, // TORNADO
-    "air-earth": (A, B) => 0,
-
-    "earth-water": (A, B) => (A + B) * 2, // TREE
-    "earth-fire": (A, B) => A * B,
-    "earth-air": (A, B) => A - B,
-    "earth-earth": (A, B) => A + B,
-
-    "ice-fire": (A, B) => A - B,        // -> water
-
-    "tornado-earth": (A, B) => A * B,   // -> air
-
-    "tree-water": (A, B) => A * B,      // -> tree
-    "tree-fire": (A, B) => A - B,       // -> fire
-    "tree-earth": (A, B) => A + B,      // -> earth
-};
-
+// Cria o deck inicial
 function generateDeck() {
     let deck = [];
-    let id = 0;
     
     for (let suit of suits) {
         for (let value of values) {
-            deck.push({ id, value, suit });
-            id++;
+            deck.push({ id: uuid(), value, suit });
         }
     }
 
     return deck;
 }
 
+// Embaralha o deck
 function shuffleDeck(deck) {
     for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -80,82 +54,101 @@ function getNumericValue(cardValue) {
     }
 }
 
-function calculatePoints(topCard, playedCard) {
-    const key = `${topCard.suit}-${playedCard.suit}`;
-
-    const A = getNumericValue(topCard.value);
-    const B = getNumericValue(playedCard.value);
-
-    if (combinations[key]) {
-
-        const addPoints = Math.ceil(combinations[key](A, B));
-
-        if (key === 'water-air') return { addPoints, newElement: "ice" };
-        if (key === 'fire-water') return { addPoints, newElement: "obsidian" };
-        if (key === 'air-air') return { addPoints, newElement: "tornado" };
-        if (key === 'earth-water') return { addPoints, newElement: "tree" };
-
-        return { addPoints };
-    }
-
-    return { addPoints: B };
+function simpleParser(formula, A, B) {
+    // Substitui as variáveis A e B nos cálculos
+    const parsedFormula = formula.replace('A', A).replace('B', B);
+    
+    return Function('"use strict"; return (' + parsedFormula + ')')();
 }
 
-const move = (sourceItems, destinationItems, source, destination) => {
-    const sourceItemsClone = [...sourceItems];
-    const destItemsClone = [...destinationItems];
-
-    const [removed] = sourceItemsClone.splice(source.index, 1);
-
-    destItemsClone.push(removed);
-
-    const result = {};
-    result[source.droppableId] = sourceItemsClone;
-    result[destination.droppableId] = destItemsClone;
-
-    return result;
-};
-
 export default function App() {
+    const dispatch = useDispatch();
+
+    const boardCards = useSelector((state) => state.board.cards);
+
     const [deck, setDeck] = useState(shuffleDeck(generateDeck()));
     const [playerHand, setPlayerHand] = useState([]);
-    const [boardCards, setBoardCards ] = useState([]);
-    const [round, setRound] = useState(0);
-    const [points, setPoints] = useState(0);
 
+    const [combine, setCombine] = useState(null);
+
+    const [points, setPoints] = useState(0);
+    
+    const [round, setRound] = useState(1);
+    const [counter, setCounter] = useState(5);
+    const [isRoundOver, setIsRoundOver] = useState(false);
+    const [isGameStarted, setIsGameStarted] = useState(false);
+
+    // Remove carta do deck
     function dealCard(currentDeck) {
         const newDeck = [...currentDeck];
         const drawnCard = newDeck.shift();
         return { drawnCard, newDeck };
     }
 
-    function refillHand() {
+    // Entrega as cartas para o jogador
+    function refillHand(currentDeck) {
+        // Recupera as cartas da mão do jogador
         const newHand = [...playerHand];
-        let currentDeck = [...deck];
 
+        // Entrega 4 cartas para o jogador
         while (newHand.length < 4 && deck.length > 0) {
             const { drawnCard, newDeck } = dealCard(currentDeck);
             newHand.push(drawnCard);
             currentDeck = newDeck;
         }
 
+        // Atualiza o estado do deck e da mão
         setDeck(currentDeck);
         setPlayerHand(newHand);
     }
 
+    // Inicia uma nova rodada
     function startRound() {
-        if (round > 10 || deck.length <= 0) return; // Game Over
+        if (round > 10 || deck.length <= 0) return; // Fim de Jogo
 
-        const newBoard = [...boardCards];
-        let currentDeck = [...deck];
+        // Coloca a carta do topo no tabuleiro
+        const { drawnCard, newDeck } = dealCard(deck);
 
-        const { drawnCard, newDeck } = dealCard(currentDeck);
-        newBoard.push(drawnCard);
-        currentDeck = newDeck;
+        dispatch(addCard(drawnCard));
 
-        setDeck(currentDeck);
-        setBoardCards(newBoard);
+        // Envia o deck atualizado
+        refillHand(newDeck);
     }
+
+    // Calcula os pontos após jogada uma carta
+    function calculatePoints(topCard, playedCard) {
+        const key = `${topCard.suit}-${playedCard.suit}`;
+    
+        const A = getNumericValue(topCard.value);
+        const B = getNumericValue(playedCard.value);
+    
+        const combination = combinationsData[key];
+    
+        if (combination && combination.formula) {
+    
+            const addPoints = simpleParser(combination.formula, A,  B);
+    
+            return { addPoints, newElement: combination.newElement };
+        }
+    
+        return { addPoints: B, newElement: null };
+    }
+
+    // Move carta da mão para o tabuleiro
+    const move = (sourceItems, destinationItems, source, destination) => {
+        const sourceItemsClone = [...sourceItems];
+        const destItemsClone = [...destinationItems];
+    
+        const [removed] = sourceItemsClone.splice(source.index, 1);
+    
+        destItemsClone.push(removed);
+        
+        const result = {};
+        result[source.droppableId] = sourceItemsClone;
+        result[destination.droppableId] = destItemsClone;
+    
+        return result;
+    };
 
     const onDragEnd = ({ source, destination }) => {
         if (!destination) return;
@@ -165,30 +158,57 @@ export default function App() {
         if (source.droppableId === 'hand' && destination.droppableId === 'board') {
             const result = move(playerHand, boardCards, source, destination);
             setPlayerHand(result.hand);
-            setBoardCards(result.board);
-
-            const lenBoard = result.board.length;
-            const { addPoints, newElement } = calculatePoints(result.board[lenBoard-2], result.board[lenBoard-1]);
-
-            console.log(addPoints);
             
-            if (newElement !== undefined) {
-                console.log(newElement);
-                const newBoard = [...boardCards];
-                newBoard.push({ id: uuid(), value: addPoints, suit: newElement });
-                setBoardCards(newBoard);
+            const tempBoard = result.board;
+            const lenBoard = tempBoard.length;
+
+            const { addPoints, newElement } = calculatePoints(tempBoard[lenBoard-2], tempBoard[lenBoard-1]);
+            
+            dispatch(addCard(tempBoard[lenBoard-1]));
+
+            // console.log(addPoints);
+            if (newElement !== null) {
+                // console.log(newElement);
+                setCombine({ id: uuid(), value: addPoints, suit: newElement });
             }
 
             setPoints(points + addPoints);
         }
     };
 
+    // Timer para o próximo round
     useEffect(() => {
-        if (playerHand.length === 0) {
-            setBoardCards([]);
+        let timer;
+        if (isRoundOver && counter > 0) {
+            timer = setTimeout(() => {
+                setCounter(prev => prev - 1);
+            }, 1000);
+        }
 
+        if (counter === 0) {
+            // Limpa o tabuleiro
+            dispatch(clear());
+    
+            // Incrementa a rodada -> Deck
             setRound(round + 1);
-            startRound();
+
+            setCounter(5);
+
+            setIsRoundOver(false);
+        }
+
+        return () => clearTimeout(timer);
+    }, [counter, isRoundOver]);
+
+    // Jogador usou uma carta
+    useEffect(() => {
+        if (!isGameStarted) {
+            setIsGameStarted(true);
+            return;
+        }
+
+        if (playerHand.length === 0 && !isRoundOver && isGameStarted) {
+            setIsRoundOver(true);
         }
     }, [playerHand]);
 
@@ -197,13 +217,22 @@ export default function App() {
             <Menu />
             <Table>
                 <Status round={round} points={points}/>
-                <div style={{ display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                <div style={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr 1fr 1fr', gridTemplateRows: '1fr', placeItems: 'center' }}>
+                    <div>Histórico</div>
                     <DragDropContext onDragEnd={onDragEnd}>
-                        <Board cards={boardCards} />
+                        <Board cards={boardCards} combine={combine}/>
                         <PlayerHand cards={playerHand} />
                     </DragDropContext>
-                    <Deck newRound={round} refillHand={refillHand}/>
+                    <Deck newRound={round} startRound={startRound}/>
                 </div>
+                {isRoundOver && (
+                    <div style={{ textAlign: 'center', marginTop: '20px' }}>
+                        <h3 style={{ fontSize: '3rem' }}>FIM DO ROUND</h3>
+                        <span style={{ fontSize: '1.7rem' }}>
+                            PRÓXIMO ROUND EM {counter} SEGUNDOS...
+                        </span>
+                    </div>
+                )}
             </Table>
         </>
     );

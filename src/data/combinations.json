@@ -1,0 +1,72 @@
+{
+    "water-water": {
+        "formula": "A * B",
+        "newElement": "tsunami"
+    },
+    "water-air": {
+        "formula": "A + B",
+        "newElement": "ice"
+    },
+    "water-earth": {
+        "formula": "A * B",
+        "newElement": "human"
+    },
+
+    "fire-water": {
+        "formula": "A * B",
+        "newElement": "obsidian"
+    },
+    "fire-fire": {
+        "formula": "A * B",
+        "newElement": "sun"
+    },
+    "fire-air": {
+        "formula": "A + B",
+        "newElement": "fire"
+    },
+
+    "air-fire": {
+        "formula": "A * B",
+        "newElement": "cloud"
+    },
+    "air-air": {
+        "formula": "A * B",
+        "newElement": "tornado"
+    },
+
+    "earth-water": {
+        "formula": "A * B",
+        "newElement": "tree"
+    },
+    "earth-air": {
+        "formula": "A + B",
+        "newElement": "stone"
+    },
+    "earth-earth": {
+        "formula": "A * B",
+        "newElement": "land"
+    },
+
+    "ice-fire": {
+        "formula": "A + B",
+        "newElement": "water"
+    },
+
+    "tornado-earth": {
+        "formula": "A + B",
+        "newElement": "air"
+    },
+
+    "tree-water": {
+        "formula": "A * B",
+        "newElement": "tree"
+    },
+    "tree-fire": {
+        "formula": "A + B",
+        "newElement": "fire"
+    },
+    "tree-earth": {
+        "formula": "A * B",
+        "newElement": "tree"
+    }
+}

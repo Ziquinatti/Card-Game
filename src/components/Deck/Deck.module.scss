@@ -1,6 +1,7 @@
 @import "../../variables";
 
-.card_anim {
+.card_anim,
+.card_anim2 {
     visibility: hidden;
     position: absolute;
     bottom: 0px;
@@ -21,20 +22,39 @@
     animation-fill-mode: forwards;
 }
 
+.card_anim2[placecard='1'] {
+    visibility: visible;
+    animation-name: put-card-on-board;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
 @keyframes put-cards-on-hand {
     0% {
         transform: scale(1);
     }
 
     100% {
-        transform: translate(calc(-50vw + 120%), 50vh);
+        transform: translate(-400px, 50vh);
+    }
+}
+
+@keyframes put-card-on-board {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: translate(-400px, 0);
     }
 }
 
 .deck {
-    position: absolute;
-    right: 10%;
+    justify-self: start;
+}
 
+.cards {
+    position: relative;
     width: 12rem;
     height: 18rem;
 }

@@ -24,13 +24,8 @@
 
 .cardOnBoard {
     cursor: default;
-
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.5);
 }
 
 .top,
@@ -50,46 +45,4 @@
     bottom: 10px;
     right: 20px;
     transform: rotate(180deg);
-}
-
-.icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    font-size: 5rem;
-}
-
-.fire {
-    color: $cardIconFire;
-}
-
-.water {
-    color: $cardIconWater;
-}
-
-.air {
-    color: $cardIconAir;
-}
-
-.earth {
-    color: $cardIconEarth;
-}
-
-.ice {
-    color: $cardIconIce;
-}
-
-.obsidian {
-    color: $cardIconObsidian;
-}
-
-.tornado {
-    color: $cardIconTornado;
-}
-
-
-.tree {
-    color: $cardIconTree;
 }
